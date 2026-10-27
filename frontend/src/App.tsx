@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import {
   Activity,
-  AlertTriangle,
-  ArrowDownRight,
   ArrowUpRight,
   Bell,
   BookOpen,
   CheckCircle2,
   ChevronDown,
-  Clock3,
   Command,
   FileSearch,
   Fingerprint,
@@ -234,7 +232,7 @@ function MetricCard({
   tone,
   trend,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   value: string;
   detail: string;
@@ -258,7 +256,7 @@ function SystemRow({
   status,
   onRefresh,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   name: string;
   detail: string;
   status: ApiStatus | "pending";
