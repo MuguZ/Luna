@@ -34,13 +34,24 @@
   },
   {
     "event_id": "evt-004",
-    "timestamp": "2026-10-27T09:16:00Z",
+    "timestamp": "2026-10-27T09:15:00Z",
     "source": "linux-auth-synthetic",
     "event_type": "authentication",
     "username": "demo-user",
     "source_ip": "192.0.2.25",
+    "outcome": "failure",
+    "resource": "ssh",
+    "message": "Synthetic example: authentication failed"
+  },
+  {
+    "event_id": "evt-005",
+    "timestamp": "2026-10-27T09:16:00Z",
+    "source": "linux-auth-synthetic",
+    "event_type": "authentication",
+    "username": "other-demo-user",
+    "source_ip": "192.0.2.26",
     "outcome": "success",
     "resource": "ssh",
-    "message": "Synthetic example: authentication succeeded after failures"
+    "message": "Synthetic example: unrelated successful authentication"
   }
 ]

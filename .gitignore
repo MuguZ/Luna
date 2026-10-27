@@ -31,5 +31,15 @@ Thumbs.db
 
 # Local data and generated output
 *.db
+*.sqlite
 *.sqlite3
+*.sqlite-*
+*.sqlite3-*
 reports/generated/
+
+# Local security data, uploads, and temporary artifacts
+backend/data/
+uploads/
+*.log
+*.tmp
+*.bak

@@ -1,25 +1,20 @@
-# SREEMA API
+# Backend
 
-## Run on CachyOS/Linux
+FastAPI handles event validation, deterministic detections, and the SQLite investigation repository. See the root [README](../README.md) for full setup, configuration, API, and data-retention guidance.
 
-From the repository root:
+From `backend/` on Linux/macOS:
 
 ```bash
-cd backend
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-dev.txt
-uvicorn app.main:app --reload
+PYTHONPATH=.. uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-In another terminal, run tests:
+Tests:
 
 ```bash
-cd backend
-source .venv/bin/activate
-pytest
+PYTHONPATH=.. python -m pytest -q tests ../agent
 ```
 
-Health endpoint: `GET http://127.0.0.1:8000/health`
-
-Interactive API docs: `http://127.0.0.1:8000/docs`
+The default database is `backend/data/sreema.sqlite3`; set `SREEMA_DATABASE_PATH` to use another local SQLite file.

@@ -1,22 +1,14 @@
-# SREEMA Frontend
+# Frontend
 
-React + TypeScript + Vite dashboard scaffold.
-
-## Run on CachyOS/Linux
-
-Install Node.js LTS and pnpm if they are not already installed. From this directory:
+React 18, TypeScript, Vite, and Lucide React dashboard. The upload workflow parses JSON locally in the browser and sends valid event data only to the configured SREEMA API. See the root [README](../README.md) for data retention details and full setup.
 
 ```bash
-pnpm install
-pnpm dev
+npm ci
+npm run dev
 ```
 
-Open `http://127.0.0.1:5173`.
-
-The dashboard checks the FastAPI health endpoint at `http://127.0.0.1:8000/health`. Start the backend separately. To change the API location, create a local `.env` file with:
+Set `VITE_API_BASE_URL` in `frontend/.env.local` only when the backend is not at `http://127.0.0.1:8000`. Production validation/build:
 
 ```bash
-VITE_API_BASE_URL=http://127.0.0.1:8000
+npm run build
 ```
-
-The current dashboard is a scaffold; investigation and alert counts are intentionally empty until the APIs exist.
