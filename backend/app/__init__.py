@@ -1,0 +1,1 @@
+"""SREEMA application package."""
