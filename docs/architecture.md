@@ -1,27 +1,26 @@
-# SREEMA Architecture (Initial)
+# SREEMA Architecture
 
-## Components
+## Runtime flow
 
-1. **React frontend (Mugu):** upload logs, view investigations, review event timelines and findings.
-2. **FastAPI application (Mugu):** API validation, file ingestion, persistence, and invokes the agent module.
-3. **Agent module (Sreema):** bounded investigation workflow, approved analysis tools, evidence correlation, and validated output.
-4. **PostgreSQL (later milestone):** persistent investigations, alerts, and audit records.
-5. **LLM provider (optional):** used for evidence-grounded explanation; deterministic detections must remain useful without it.
+1. React reads and validates a user-selected JSON file using the browser File API.
+2. FastAPI validates the submitted request again with Pydantic and rejects invalid/duplicate events.
+3. `agent/detections.py` runs deterministic rules over timezone-aware event models and returns typed findings with evidence IDs.
+4. `backend/app/repository.py` stores the response and, by default, the original event objects in a local SQLite database.
+5. The frontend reloads paginated investigation history from the backend and requests a stored record when the user opens its details.
 
-## First vertical slice
+## Module boundaries
 
-1. Load a synthetic JSON event file.
-2. Validate and normalise the events.
-3. Apply deterministic detection rules.
-4. Run an investigation with the agent module.
-5. Validate its result against the shared output contract.
-6. Display the findings in the frontend.
+- `frontend/src/`: dashboard, upload flow, API client, local history filtering, result review.
+- `backend/app/main.py`: HTTP routes and application configuration.
+- `backend/app/models.py`: request and history response schemas.
+- `backend/app/repository.py`: SQLite persistence and filtering.
+- `agent/schemas.py`: validated event, finding, and timeline structures.
+- `agent/detections.py`: four deterministic authentication rules.
 
-## Principles
+SQLite schema creation uses `CREATE TABLE IF NOT EXISTS` at application startup. There is no migration tool yet. The repository is intended for a local, single-user prototype; it has no authentication, tenant separation, external integrations, or active response actions.
 
-- Evidence first: every finding should trace to event IDs.
-- Deterministic detection and LLM explanation remain separate.
-- Bounded workflows with explicit tool-call and runtime limits.
-- Read-only analysis of supplied logs.
-- Human review before any future response action.
-- Cross-platform local development on CachyOS and Windows.
+## Evidence and normalisation
+
+The original submitted event objects are retained verbatim as JSON by default. The analysis timeline is sorted chronologically but carries source timestamp strings. Event type and authentication outcome comparisons use case-insensitive matching; usernames and IP addresses are left as supplied because normalization may change their identity semantics. Every detection evidence ID is checked against the submitted event set.
+
+Raw-event retention can be disabled with `SREEMA_STORE_RAW_EVENTS=false`. The persisted finding/result metadata remains available, but user and source address timeline fields are omitted when raw retention is off.

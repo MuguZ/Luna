@@ -1,5 +1,7 @@
 
 from datetime import datetime
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
@@ -8,23 +10,18 @@ class SecurityEvent(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    event_id: str = Field(min_length=1)
+    event_id: str = Field(min_length=1, max_length=200)
     timestamp: datetime
-    event_type: str = Field(min_length=1)
-    source: str = Field(min_length=1)
+    event_type: str = Field(min_length=1, max_length=100)
+    source: str = Field(min_length=1, max_length=200)
 
-    username: str | None = None
-    source_ip: str | None = None
-    outcome: str | None = None
-    resource: str | None = None
-    message: str | None = None
+    username: str | None = Field(default=None, max_length=256)
+    source_ip: str | None = Field(default=None, max_length=100)
+    outcome: str | None = Field(default=None, max_length=100)
+    resource: str | None = Field(default=None, max_length=1000)
+    message: str | None = Field(default=None, max_length=10000)
 
-    @field_validator(
-        "event_id",
-        "event_type",
-        "source",
-        mode="before",
-    )
+    @field_validator("event_id", "event_type", "source", mode="before")
     @classmethod
     def validate_required_strings(cls, value):
         if not isinstance(value, str) or not value.strip():
@@ -39,11 +36,33 @@ class SecurityEvent(BaseModel):
         return value
 
 
+class Finding(BaseModel):
+    title: str
+    rationale: str
+    severity: Literal["low", "medium", "high", "critical"]
+    confidence: float = Field(ge=0, le=1)
+    evidence_event_ids: list[str] = Field(min_length=1)
+    recommended_actions: list[str] = Field(default_factory=list)
+
+
+class TimelineEvent(BaseModel):
+    event_id: str
+    timestamp: str
+    event_type: str
+    source: str
+    username: str | None = None
+    source_ip: str | None = None
+    outcome: str | None = None
+
+
 def validate_events(events: list[dict]) -> list[SecurityEvent]:
     """Validate events and reject duplicate event IDs."""
 
     if not isinstance(events, list):
         raise ValueError("Events must be provided as a list")
+
+    if len(events) > 10000:
+        raise ValueError("A maximum of 10000 events is allowed")
 
     validated_events = [
         SecurityEvent.model_validate(event)
