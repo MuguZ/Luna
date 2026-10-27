@@ -9,7 +9,7 @@ SREEMA is a defensive cybersecurity project for analysing supplied or synthetic 
 
 ## Current status
 
-This repository contains the initial project scaffold and shared integration contract. The agent and UI are not implemented yet.
+This repository contains the initial scaffold, a functional API health endpoint, a React dashboard shell, synthetic sample events, and a shared agent integration contract. Investigation ingestion and the agent are not implemented yet.
 
 ## Repository layout
 
@@ -44,11 +44,11 @@ python -m pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The API health endpoint will be available at `http://127.0.0.1:8000/health` once the backend starter is implemented locally.
+The health endpoint is available at `http://127.0.0.1:8000/health` while the backend is running. API docs: `http://127.0.0.1:8000/docs`.
 
 ### Frontend
 
-The frontend scaffold will be initialized in the next implementation step. Recommended stack: React, TypeScript, Vite, Tailwind CSS, and pnpm.
+The React + TypeScript + Vite dashboard is scaffolded with a custom responsive CSS theme. Run `cd frontend && pnpm install && pnpm dev`; open `http://127.0.0.1:5173`. The dashboard checks the FastAPI health endpoint. Investigation data is placeholder UI until the ingestion and agent endpoints are implemented.
 
 ## Team workflow
 
