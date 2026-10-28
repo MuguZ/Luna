@@ -38,7 +38,7 @@ def event(event_id: str, timestamp: str, *, username="alice", source_ip="192.0.2
 def test_health_http_contract(client):
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "service": "sreema-api"}
+    assert response.json() == {"status": "ok", "service": "luna-api"}
 
 
 def test_detection_rules_endpoint_reports_configured_rules(client):

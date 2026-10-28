@@ -1,1 +1,1 @@
-"""SREEMA application package."""
+"""Luna application package."""

@@ -1,4 +1,4 @@
-# SREEMA Agent Module
+# Luna Agent Module
 
 This package is the integration boundary for Sreema's investigation-agent work.
 

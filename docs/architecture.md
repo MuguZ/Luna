@@ -1,4 +1,4 @@
-# SREEMA Architecture
+# Luna Architecture
 
 ## Runtime flow
 
@@ -23,4 +23,4 @@ SQLite schema creation uses `CREATE TABLE IF NOT EXISTS` at application startup.
 
 The original submitted event objects are retained verbatim as JSON by default. The analysis timeline is sorted chronologically but carries source timestamp strings. Event type and authentication outcome comparisons use case-insensitive matching; usernames and IP addresses are left as supplied because normalization may change their identity semantics. Every detection evidence ID is checked against the submitted event set.
 
-Raw-event retention can be disabled with `SREEMA_STORE_RAW_EVENTS=false`. The persisted finding/result metadata remains available, but user and source address timeline fields are omitted when raw retention is off.
+Raw-event retention can be disabled with `LUNA_STORE_RAW_EVENTS=false`. The persisted finding/result metadata remains available, but user and source address timeline fields are omitted when raw retention is off.
