@@ -18,6 +18,11 @@ FAILURES = {"failure", "failed", "denied"}
 SUCCESSES = {"success", "succeeded", "accepted"}
 
 
+def _setting(name: str, legacy_name: str, default: str) -> str:
+    """Prefer Luna configuration while accepting legacy SREEMA variables."""
+    return os.getenv(name, os.getenv(legacy_name, default))
+
+
 @dataclass(frozen=True)
 class DetectionConfig:
     repeated_failures: int = 3
@@ -32,19 +37,19 @@ class DetectionConfig:
     @classmethod
     def from_environment(cls) -> "DetectionConfig":
         values = {
-            "repeated_failures": int(os.getenv("SREEMA_RULE_REPEATED_THRESHOLD", "3")),
-            "repeated_window_minutes": int(os.getenv("SREEMA_RULE_REPEATED_WINDOW_MINUTES", "5")),
-            "success_after_failures": int(os.getenv("SREEMA_RULE_SUCCESS_THRESHOLD", "3")),
-            "success_window_minutes": int(os.getenv("SREEMA_RULE_SUCCESS_WINDOW_MINUTES", "10")),
-            "burst_failures": int(os.getenv("SREEMA_RULE_BURST_THRESHOLD", "10")),
-            "burst_window_minutes": int(os.getenv("SREEMA_RULE_BURST_WINDOW_MINUTES", "5")),
-            "multiple_account_count": int(os.getenv("SREEMA_RULE_MULTIPLE_ACCOUNT_THRESHOLD", "5")),
-            "multiple_account_window_minutes": int(os.getenv("SREEMA_RULE_MULTIPLE_ACCOUNT_WINDOW_MINUTES", "5")),
+            "repeated_failures": int(_setting("LUNA_RULE_REPEATED_THRESHOLD", "SREEMA_RULE_REPEATED_THRESHOLD", "3")),
+            "repeated_window_minutes": int(_setting("LUNA_RULE_REPEATED_WINDOW_MINUTES", "SREEMA_RULE_REPEATED_WINDOW_MINUTES", "5")),
+            "success_after_failures": int(_setting("LUNA_RULE_SUCCESS_THRESHOLD", "SREEMA_RULE_SUCCESS_THRESHOLD", "3")),
+            "success_window_minutes": int(_setting("LUNA_RULE_SUCCESS_WINDOW_MINUTES", "SREEMA_RULE_SUCCESS_WINDOW_MINUTES", "10")),
+            "burst_failures": int(_setting("LUNA_RULE_BURST_THRESHOLD", "SREEMA_RULE_BURST_THRESHOLD", "10")),
+            "burst_window_minutes": int(_setting("LUNA_RULE_BURST_WINDOW_MINUTES", "SREEMA_RULE_BURST_WINDOW_MINUTES", "5")),
+            "multiple_account_count": int(_setting("LUNA_RULE_MULTIPLE_ACCOUNT_THRESHOLD", "SREEMA_RULE_MULTIPLE_ACCOUNT_THRESHOLD", "5")),
+            "multiple_account_window_minutes": int(_setting("LUNA_RULE_MULTIPLE_ACCOUNT_WINDOW_MINUTES", "SREEMA_RULE_MULTIPLE_ACCOUNT_WINDOW_MINUTES", "5")),
         }
         if any(value < 1 for value in values.values()):
             raise ValueError("Detection thresholds and windows must be positive integers")
         if values["multiple_account_count"] < 2:
-            raise ValueError("SREEMA_RULE_MULTIPLE_ACCOUNT_THRESHOLD must be at least 2")
+            raise ValueError("LUNA_RULE_MULTIPLE_ACCOUNT_THRESHOLD must be at least 2")
         return cls(**values)
 
     def rules(self) -> list[dict]:

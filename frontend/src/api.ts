@@ -70,7 +70,7 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   try {
     response = await fetch(`${API_BASE_URL}${path}`, init);
   } catch {
-    throw new Error("Could not reach the SREEMA API. Check that the backend is running.");
+    throw new Error("Could not reach the Luna API. Check that the backend is running.");
   }
   const text = await response.text();
   let payload: unknown;

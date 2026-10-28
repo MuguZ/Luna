@@ -1,6 +1,6 @@
-# SREEMA — Threat Intelligence & Investigation Agent
+# Luna — Threat Intelligence & Investigation Agent
 
-SREEMA is a local-first defensive security investigation prototype. It accepts supplied JSON event logs, validates them, runs deterministic authentication rules, and stores reviewable investigation records in SQLite. It does not use an LLM, external threat-intelligence provider, live monitoring, or active response actions.
+Luna is a local-first defensive security investigation prototype. It accepts supplied JSON event logs, validates them, runs deterministic authentication rules, and stores reviewable investigation records in SQLite. It does not use an LLM, external threat-intelligence provider, live monitoring, or active response actions.
 
 ## Features implemented
 
@@ -71,20 +71,20 @@ Open `http://127.0.0.1:5173`. The frontend uses `VITE_API_BASE_URL` when set; ot
 
 ## Environment variables
 
-Backend variables are read when the application starts:
+Backend variables are read when the application starts. The matching legacy `SREEMA_RULE_*` variables remain supported as fallbacks for all detection settings; when both names are set, the `LUNA_*` value takes precedence:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `SREEMA_DATABASE_PATH` | `backend/data/sreema.sqlite3` | Local SQLite file path. Relative paths use the backend process working directory. |
-| `SREEMA_STORE_RAW_EVENTS` | `true` | Retain submitted source event objects for later review. Set `false` to omit raw event JSON; summary, findings, and event references remain stored. |
-| `SREEMA_RULE_REPEATED_THRESHOLD` | `3` | Failures for same account/source rule threshold. |
-| `SREEMA_RULE_REPEATED_WINDOW_MINUTES` | `5` | Window for repeated failures. |
-| `SREEMA_RULE_SUCCESS_THRESHOLD` | `3` | Prior failures for success-after-failures rule. |
-| `SREEMA_RULE_SUCCESS_WINDOW_MINUTES` | `10` | Sequence window. |
-| `SREEMA_RULE_BURST_THRESHOLD` | `10` | Failures from one source for burst rule. |
-| `SREEMA_RULE_BURST_WINDOW_MINUTES` | `5` | Burst window. |
-| `SREEMA_RULE_MULTIPLE_ACCOUNT_THRESHOLD` | `5` | Distinct usernames for multi-account rule (minimum 2). |
-| `SREEMA_RULE_MULTIPLE_ACCOUNT_WINDOW_MINUTES` | `5` | Multi-account targeting window. |
+| `LUNA_DATABASE_PATH` | `backend/data/sreema.sqlite3` | Local SQLite file path. Relative paths use the backend process working directory. `SREEMA_DATABASE_PATH` remains a supported fallback. |
+| `LUNA_STORE_RAW_EVENTS` | `true` | Retain submitted source event objects for later review. Set `false` to omit raw event JSON; summary, findings, and event references remain stored. `SREEMA_STORE_RAW_EVENTS` remains a supported fallback. |
+| `LUNA_RULE_REPEATED_THRESHOLD` | `3` | Failures for same account/source rule threshold. |
+| `LUNA_RULE_REPEATED_WINDOW_MINUTES` | `5` | Window for repeated failures. |
+| `LUNA_RULE_SUCCESS_THRESHOLD` | `3` | Prior failures for success-after-failures rule. |
+| `LUNA_RULE_SUCCESS_WINDOW_MINUTES` | `10` | Sequence window. |
+| `LUNA_RULE_BURST_THRESHOLD` | `10` | Failures from one source for burst rule. |
+| `LUNA_RULE_BURST_WINDOW_MINUTES` | `5` | Burst window. |
+| `LUNA_RULE_MULTIPLE_ACCOUNT_THRESHOLD` | `5` | Distinct usernames for multi-account rule (minimum 2). |
+| `LUNA_RULE_MULTIPLE_ACCOUNT_WINDOW_MINUTES` | `5` | Multi-account targeting window. |
 
 For the frontend, create `frontend/.env.local` with `VITE_API_BASE_URL=http://127.0.0.1:8000` only if using a different API address. Do not commit local env files or secrets.
 
@@ -145,9 +145,9 @@ Time windows are inclusive at the boundary; input timestamps must be timezone-aw
 
 ## Persistence and data handling
 
-The default DB path is `backend/data/sreema.sqlite3`; SQLite tables are initialized idempotently at backend startup. No migration tool is used at this prototype stage. Database files, logs, local backups, Python environments, and frontend build/dependency directories are ignored by Git.
+The default DB path remains `backend/data/sreema.sqlite3` to preserve existing investigation history; Luna continues to use this file unless `LUNA_DATABASE_PATH` or its legacy `SREEMA_DATABASE_PATH` alias selects another path. SQLite tables are initialized idempotently at backend startup. No migration tool is used at this prototype stage. Database files, logs, local backups, Python environments, and frontend build/dependency directories are ignored by Git.
 
-Raw logs can contain sensitive account names, addresses, and messages. Upload only logs you are authorized to inspect. The browser sends the validated event batch only to the configured SREEMA API. By default, that backend stores original event JSON alongside its findings and timeline on the local machine until deletion. This is disclosed in the investigation modal. Set `SREEMA_STORE_RAW_EVENTS=false` before starting the backend to avoid storing raw events; analysis timeline and findings are still retained. Use the history Delete control to remove an investigation and its stored event data. There is no authentication or user isolation, so do not expose this prototype API to an untrusted network.
+Raw logs can contain sensitive account names, addresses, and messages. Upload only logs you are authorized to inspect. The browser sends the validated event batch only to the configured Luna API. By default, that backend stores original event JSON alongside its findings and timeline on the local machine until deletion. This is disclosed in the investigation modal. Set `LUNA_STORE_RAW_EVENTS=false` before starting the backend to avoid storing raw events; analysis timeline and findings are still retained. Use the history Delete control to remove an investigation and its stored event data. There is no authentication or user isolation, so do not expose this prototype API to an untrusted network.
 
 ## Tests and CI
 

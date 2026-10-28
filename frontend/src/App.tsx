@@ -328,7 +328,7 @@ function App() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `sreema-investigation-${detail.investigation_id}.json`;
+    anchor.download = `luna-investigation-${detail.investigation_id}.json`;
     anchor.click();
     URL.revokeObjectURL(url);
   };
@@ -362,7 +362,7 @@ function App() {
           </div>
           <div>
             <div className="brand-name">
-              SREEMA<span>.</span>
+              Luna<span>.</span>
             </div>
             <div className="brand-caption">SECURITY INTELLIGENCE</div>
           </div>
@@ -427,7 +427,7 @@ function App() {
             <Sparkles size={16} />
           </div>
           <div className="sidebar-status-copy">
-            <strong>SREEMA Agent</strong>
+            <strong>Luna Agent</strong>
             <span>Rule-based prototype</span>
           </div>
           <span className="pending-dot" />
@@ -662,7 +662,7 @@ function App() {
           <footer className="page-footer">
             <span>
               <Command size={13} />
-              SREEMA <span className="footer-divider">/</span> Threat
+              Luna <span className="footer-divider">/</span> Threat
               Intelligence &amp; Investigation Agent
             </span>
             <span>
@@ -686,7 +686,7 @@ function App() {
               <div>
                 <div className="panel-kicker">SECURITY ANALYSIS</div>
                 <h2 id="investigation-title">New investigation</h2>
-                <p className="investigation-description">Upload JSON security events from your device or try the synthetic demo. Files are read in your browser and sent only to the configured SREEMA API.</p>
+                <p className="investigation-description">Upload JSON security events from your device or try the synthetic demo. Files are read in your browser and sent only to the configured Luna API.</p>
               </div>
               <button
                 className="icon-button"
@@ -700,7 +700,7 @@ function App() {
 
             <div className="demo-notice">
               <ShieldCheck size={17} />
-              <span>Only the sample option uses synthetic data. Uploaded events go to your configured SREEMA API and are retained in local SQLite by default until deleted. Set SREEMA_STORE_RAW_EVENTS=false to disable raw event retention.</span>
+              <span>Only the sample option uses synthetic data. Uploaded events go to your configured Luna API and are retained in local SQLite by default until deleted. Set LUNA_STORE_RAW_EVENTS=false to disable raw event retention.</span>
             </div>
 
             <div className="upload-section">

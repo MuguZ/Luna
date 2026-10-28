@@ -25,7 +25,7 @@ jobs:
         working-directory: backend
         env:
           PYTHONPATH: ${{ github.workspace }}
-          SREEMA_DATABASE_PATH: ${{ runner.temp }}/sreema-ci.sqlite3
+          LUNA_DATABASE_PATH: ${{ runner.temp }}/luna-ci.sqlite3
         run: python -m pytest -q tests ../agent
 
   frontend:

@@ -17,4 +17,4 @@ Tests:
 PYTHONPATH=.. python -m pytest -q tests ../agent
 ```
 
-The default database is `backend/data/sreema.sqlite3`; set `SREEMA_DATABASE_PATH` to use another local SQLite file.
+The default database remains `backend/data/sreema.sqlite3` to preserve existing history. Set `LUNA_DATABASE_PATH` to choose another file; the previous `SREEMA_DATABASE_PATH` variable remains supported as a fallback.

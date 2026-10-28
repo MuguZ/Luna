@@ -1,4 +1,4 @@
-"""SREEMA local defensive security analysis API."""
+"""Luna local defensive security analysis API."""
 
 from __future__ import annotations
 
@@ -22,8 +22,13 @@ DEFAULT_DATABASE_PATH = Path(__file__).resolve().parents[1] / "data" / "sreema.s
 MAX_REQUEST_BYTES = 6 * 1024 * 1024
 
 
-def _env_bool(name: str, default: bool) -> bool:
-    value = os.getenv(name)
+def _env_value(name: str, legacy_name: str, default: str) -> str:
+    """Read Luna settings first while preserving existing SREEMA installations."""
+    return os.getenv(name, os.getenv(legacy_name, default))
+
+
+def _env_bool(name: str, legacy_name: str, default: bool) -> bool:
+    value = _env_value(name, legacy_name, str(default))
     if value is None:
         return default
     return value.strip().casefold() in {"1", "true", "yes", "on"}
@@ -31,14 +36,14 @@ def _env_bool(name: str, default: bool) -> bool:
 
 def health() -> dict[str, str]:
     """Basic liveness check; deliberately independent from database status."""
-    return {"status": "ok", "service": "sreema-api"}
+    return {"status": "ok", "service": "luna-api"}
 
 
 def create_app(database_path: Path | None = None) -> FastAPI:
-    configured_path = database_path or Path(os.getenv("SREEMA_DATABASE_PATH", DEFAULT_DATABASE_PATH))
+    configured_path = database_path or Path(_env_value("LUNA_DATABASE_PATH", "SREEMA_DATABASE_PATH", str(DEFAULT_DATABASE_PATH)))
     repository = InvestigationRepository(
         configured_path,
-        store_events=_env_bool("SREEMA_STORE_RAW_EVENTS", True),
+        store_events=_env_bool("LUNA_STORE_RAW_EVENTS", "SREEMA_STORE_RAW_EVENTS", True),
     )
     detection_config = DetectionConfig.from_environment()
 
@@ -48,8 +53,8 @@ def create_app(database_path: Path | None = None) -> FastAPI:
         yield
 
     app = FastAPI(
-        title="SREEMA API",
-        description="Defensive security log investigation API",
+        title="Luna API",
+        description="Luna — Threat Intelligence & Investigation Agent. Defensive security log investigation API.",
         version="0.3.0",
         lifespan=lifespan,
     )
